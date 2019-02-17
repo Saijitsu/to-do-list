@@ -62,7 +62,7 @@ describe('controller', function () {
 		title: 'my todo'
 	};
 
-	let todoList = [{ // Use as global variable for todo list.
+	var todoList = [{ // Use as global variable for todo list.
 			id: 0,
 			title: 'my todo 1',
 			completed: false
