@@ -3,7 +3,7 @@
 describe('controller', function () {
 	'use strict';
 
-	var subject, model, view;
+	var subject, model, view, todo, todoList; // Déclaration des variables ici
 
 	var setUpModel = function (todos) {
 		model.read.and.callFake(function (query, callback) {
@@ -56,35 +56,35 @@ describe('controller', function () {
 		model = jasmine.createSpyObj('model', ['read', 'getCount', 'remove', 'create', 'update']);
 		view = createViewStub();
 		subject = new app.Controller(model, view);
+
+		todo = { // Use as global variable for todo.
+			title: 'my todo'
+		};
+	
+		todoList = [{ // Use as global variable for todo list.
+				id: 0,
+				title: 'my todo 1',
+				completed: false
+			},
+			{
+				id: 1,
+				title: 'my todo 2',
+				completed: true
+			},
+			{
+				id: 2,
+				title: 'my todo 3',
+				completed: false
+			}
+		];
 	});
-
-	var todo = { // Use as global variable for todo.
-		title: 'my todo'
-	};
-
-	var todoList = [{ // Use as global variable for todo list.
-			id: 0,
-			title: 'my todo 1',
-			completed: false
-		},
-		{
-			id: 1,
-			title: 'my todo 2',
-			completed: true
-		},
-		{
-			id: 2,
-			title: 'my todo 3',
-			completed: false
-		}
-	];
 
 	it('should show entries on start-up', function () { // TEST OK
 		setUpModel([todo]);
 
 		subject.setView(''); // Check if database is load (data is init with setView())
 
-		expect(model.read).toHaveBeenCalledWith(jasmine.any(Function)); // not for sure! or just use jasmine.any()
+		expect(model.read).toHaveBeenCalledWith(jasmine.any(Function));
 		/*jasmine.any takes a constructor or "class" name as an expected value.
 		It returns true if the constructor matches the constructor of the actual value.*/
 
@@ -114,16 +114,16 @@ describe('controller', function () {
 			setUpModel([todo]);
 
 			subject.setView('#/active'); // Will check active view entries
-
 			expect(view.render).toHaveBeenCalledWith('showEntries', [todo]);
+			// expect(view.render).toHaveBeenCalledWith('setFilter', 'active'); // can check this
 		});
 
 		it('should show completed entries', function () { // TEST OK
 			setUpModel([todo]);
 
 			subject.setView('#/completed'); // Will check completed view entries
-
 			expect(view.render).toHaveBeenCalledWith('showEntries', [todo]);
+			// expect(view.render).toHaveBeenCalledWith('setFilter', 'completed'); // can check this
 		});
 	});
 
